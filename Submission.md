@@ -1,3 +1,32 @@
+# ML Assignment Submission
+
+**Student Name:** Ravi Singh Bhadauria  
+**BITS ID:** 2025AB05247
+
+---
+
+## 1. GitHub Repository Link
+
+**Repository URL:**  
+https://github.com/ravisinghrsb/ML_Assignment_2_Model_Classification_Comp
+
+---
+
+## 2. Live Streamlit App Link
+
+**Deployed App URL (Streamlit Community Cloud):**  
+https://ravi-bhadauria-mlassignment2-modelclassificationcomp.streamlit.app/
+
+---
+
+## 3. Screenshot - Execution on BITS Virtual Lab
+
+![screenshot](2025ab05247ml.png)
+
+---
+
+## 4. README Content
+
 # Wine Quality Classification Using Machine Learning
 
 ## 1. Problem Statement
@@ -100,10 +129,6 @@ Results on test set (1,300 samples):
 
 ## Project Structure
 
----
-
-## Project Structure
-
 ```
 mlassignment/
 │
@@ -111,6 +136,7 @@ mlassignment/
 ├── train_models.py           # Model training script
 ├── requirements.txt          # Python dependencies
 ├── README.md                 # Project documentation
+├── submission.md             # Assignment submission file
 │
 ├── data/                     # Dataset directory
 │   ├── wine_quality.csv     # Combined wine quality dataset (6,497 samples)
@@ -127,8 +153,6 @@ mlassignment/
 │   ├── xgboost_(ensemble).pkl
 │   ├── scaler.pkl           # StandardScaler for feature normalization
 │   └── model_metrics.csv    # Model evaluation metrics
-│
-└── .gitignore               # Git ignore file
 ```
 
 ## Implementation Pipeline
@@ -198,6 +222,8 @@ streamlit run app.py
 
 The application will open in your browser at http://localhost:8501
 
+**Live Demo:** https://ravi-bhadauria-mlassignment2-modelclassificationcomp.streamlit.app/
+
 ### Web App Features
 
 The Streamlit application provides 5 comprehensive tabs:
@@ -258,19 +284,6 @@ The Streamlit application provides 5 comprehensive tabs:
 - XGBoost offers highest precision (84.21%), minimizing false positives
 - The 6,497 sample dataset provides sufficient data for robust model training
 - 12 chemical properties are effective predictors of wine quality
-
----
-
-## Future Enhancements
-
-- Hyperparameter tuning using GridSearchCV or RandomizedSearchCV
-- Feature engineering to create interaction terms between chemical properties
-- K-fold cross-validation for more robust performance estimates
-- SHAP values for model interpretability and feature importance analysis
-- Deep learning models (Neural Networks) for complex pattern recognition
-- REST API development for production deployment
-- Cloud deployment on AWS, Azure, or Heroku
-- Mobile application for real-time quality assessment
 
 ---
 

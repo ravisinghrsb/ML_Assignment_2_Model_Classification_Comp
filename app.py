@@ -10,7 +10,7 @@ import pickle
 from pathlib import Path
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.metrics import confusion_matrix, roc_curve, auc
+from sklearn.metrics import confusion_matrix, roc_curve, auc, classification_report
 import plotly.graph_objects as go
 import plotly.express as px
 
@@ -122,9 +122,62 @@ def load_dataset():
     return None
 
 @st.cache_data
+def load_test_data():
+    """Load and prepare test data for model evaluation"""
+    from sklearn.model_selection import train_test_split
+    
+    dataset_path = Path('data/wine_quality.csv')
+    if not dataset_path.exists():
+        return None, None
+    
+    df = pd.read_csv(dataset_path)
+    
+    # Convert to binary classification
+    df['quality_binary'] = (df['quality'] >= 6).astype(int)
+    df = df.drop('quality', axis=1)
+    
+    # Separate features and target
+    X = df.drop('quality_binary', axis=1)
+    y = df['quality_binary']
+    
+    # Split data (same as training script)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42, stratify=y
+    )
+    
+    return X_test, y_test
+
+@st.cache_data
 def convert_df_to_csv(df):
     """Convert dataframe to CSV for download"""
     return df.to_csv(index=False).encode('utf-8')
+
+def create_confusion_matrix(y_true, y_pred, model_name):
+    """Create confusion matrix visualization"""
+    cm = confusion_matrix(y_true, y_pred)
+    
+    fig, ax = plt.subplots(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+                xticklabels=['Below Average', 'Good Quality'],
+                yticklabels=['Below Average', 'Good Quality'],
+                cbar_kws={'label': 'Count'})
+    plt.title(f'Confusion Matrix - {model_name}', fontsize=14, fontweight='bold')
+    plt.ylabel('True Label', fontsize=12)
+    plt.xlabel('Predicted Label', fontsize=12)
+    plt.tight_layout()
+    return fig
+
+def display_classification_metrics(y_true, y_pred, model_name):
+    """Generate and display classification report"""
+    report = classification_report(y_true, y_pred, 
+                                  target_names=['Below Average', 'Good Quality'],
+                                  output_dict=True)
+    
+    # Convert to DataFrame for better display
+    report_df = pd.DataFrame(report).transpose()
+    report_df = report_df.round(4)
+    
+    return report_df
 
 def get_user_input():
     """Get wine properties from sidebar"""
@@ -372,10 +425,11 @@ def main():
     features_scaled = scaler.transform(features)
     
     # Main tabs
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
         "📊 Model Performance", 
         "🎯 Predictions", 
         "📈 Visualizations",
+        "🔍 Model Evaluation",
         "🧪 Test Your Data",
         "ℹ️ About"
     ])
@@ -420,6 +474,101 @@ def main():
             # Comparison charts
             st.markdown("---")
             st.plotly_chart(create_metrics_comparison_chart(metrics_df), use_container_width=True, key='metrics_chart')
+            
+            # Confusion Matrix & Classification Report Section
+            st.markdown("---")
+            st.header("📊 Confusion Matrix & Classification Report")
+            st.markdown("Performance of each model on the test dataset (1,300 samples)")
+            
+            # Load test data
+            X_test, y_test = load_test_data()
+            
+            if X_test is not None and y_test is not None:
+                # Scale test data
+                X_test_scaled = scaler.transform(X_test)
+                
+                # Model selector for detailed view
+                st.subheader("🔍 Select Model for Detailed Analysis")
+                selected_model_perf = st.selectbox(
+                    "Choose a model to view confusion matrix and classification report:",
+                    list(models.keys()),
+                    key="perf_model_select"
+                )
+                
+                if selected_model_perf:
+                    model = models[selected_model_perf]
+                    
+                    # Generate predictions
+                    y_pred = model.predict(X_test_scaled)
+                    
+                    st.markdown("---")
+                    
+                    # Display side by side
+                    col_cm, col_cr = st.columns(2)
+                    
+                    with col_cm:
+                        st.subheader(f"📊 Confusion Matrix")
+                        fig_cm = create_confusion_matrix(y_test, y_pred, selected_model_perf)
+                        st.pyplot(fig_cm)
+                        plt.close()
+                        
+                        # Confusion matrix interpretation
+                        cm = confusion_matrix(y_test, y_pred)
+                        tn, fp, fn, tp = cm.ravel()
+                        
+                        st.info(f"""
+                        **Matrix Values:**
+                        - True Negatives: {tn} (Correctly predicted Below Average)
+                        - False Positives: {fp} (Wrongly predicted as Good Quality)
+                        - False Negatives: {fn} (Missed Good Quality wines)
+                        - True Positives: {tp} (Correctly predicted Good Quality)
+                        
+                        **Total Test Samples:** {len(y_test)}
+                        """)
+                    
+                    with col_cr:
+                        st.subheader(f"📋 Classification Report")
+                        report_df = display_classification_metrics(y_test, y_pred, selected_model_perf)
+                        
+                        # Display styled classification report
+                        st.dataframe(
+                            report_df.style.background_gradient(cmap='RdYlGn', subset=['precision', 'recall', 'f1-score'])
+                                          .format("{:.4f}"),
+                            height=280
+                        )
+                        
+                        st.info("""
+                        **Metrics Guide:**
+                        - **Precision**: Accuracy of positive predictions
+                        - **Recall**: Coverage of actual positives
+                        - **F1-Score**: Harmonic mean of precision/recall
+                        - **Support**: Number of samples per class
+                        """)
+                    
+                    # Download button for this model's report
+                    st.markdown("---")
+                    from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+                    
+                    acc = accuracy_score(y_test, y_pred)
+                    prec = precision_score(y_test, y_pred)
+                    rec = recall_score(y_test, y_pred)
+                    f1 = f1_score(y_test, y_pred)
+                    
+                    eval_data = pd.DataFrame({
+                        'Metric': ['Accuracy', 'Precision', 'Recall', 'F1-Score', 'True Negatives', 'False Positives', 'False Negatives', 'True Positives'],
+                        'Value': [acc, prec, rec, f1, tn, fp, fn, tp]
+                    })
+                    
+                    eval_csv = convert_df_to_csv(eval_data)
+                    st.download_button(
+                        label=f"📥 Download {selected_model_perf} Report",
+                        data=eval_csv,
+                        file_name=f"{selected_model_perf.lower().replace(' ', '_')}_test_report.csv",
+                        mime="text/csv",
+                        help="Download confusion matrix and metrics for this model"
+                    )
+            else:
+                st.warning("⚠️ Test data not available. Make sure wine_quality.csv exists in the data folder.")
         else:
             st.warning("Metrics file not found. Please train models first.")
     
@@ -546,8 +695,190 @@ def main():
                 )
                 st.plotly_chart(fig_f1, use_container_width=True)
     
-    # Tab 4: Test Your Data
+    # Tab 4: Model Evaluation
     with tab4:
+        st.header("🔍 Model Evaluation - Confusion Matrix & Classification Report")
+        st.markdown("Upload test data with actual labels to evaluate model performance with confusion matrix and detailed metrics.")
+        
+        # Instructions
+        with st.expander("📋 Instructions - Upload Test Dataset with Labels", expanded=True):
+            st.markdown("""
+            ### Required CSV Format
+            Your CSV file must contain:
+            - **12 feature columns** (same as prediction format)
+            - **1 label column** named `quality_binary` with values 0 (Below Average) or 1 (Good Quality)
+            
+            | Column Name | Type | Description |
+            |------------|------|-------------|
+            | `fixed_acidity` | float | Fixed acidity (g/dm³) |
+            | `volatile_acidity` | float | Volatile acidity (g/dm³) |
+            | `citric_acid` | float | Citric acid (g/dm³) |
+            | `residual_sugar` | float | Residual sugar (g/dm³) |
+            | `chlorides` | float | Chlorides (g/dm³) |
+            | `free_sulfur_dioxide` | float | Free SO₂ (mg/dm³) |
+            | `total_sulfur_dioxide` | float | Total SO₂ (mg/dm³) |
+            | `density` | float | Density (g/cm³) |
+            | `pH` | float | pH level |
+            | `sulphates` | float | Sulphates (g/dm³) |
+            | `alcohol` | float | Alcohol (%) |
+            | `wine_type` | int | 0=White, 1=Red |
+            | **`quality_binary`** | **int** | **0=Below Average, 1=Good Quality** |
+            
+            ### Sample Format
+            ```csv
+            fixed_acidity,volatile_acidity,citric_acid,residual_sugar,chlorides,free_sulfur_dioxide,total_sulfur_dioxide,density,pH,sulphates,alcohol,wine_type,quality_binary
+            7.0,0.5,0.3,2.0,0.08,15.0,50.0,0.996,3.3,0.6,10.0,0,1
+            8.0,0.4,0.4,2.5,0.09,20.0,60.0,0.997,3.2,0.5,11.0,1,1
+            6.5,0.6,0.2,1.8,0.07,12.0,45.0,0.995,3.4,0.7,9.5,0,0
+            ```
+            """)
+        
+        st.markdown("---")
+        
+        # Model selection for evaluation
+        st.subheader("1️⃣ Select Model for Evaluation")
+        eval_model_name = st.selectbox(
+            "Choose a model to evaluate:",
+            list(models.keys()),
+            key="eval_model_select",
+            help="Select which model to evaluate with your test data"
+        )
+        
+        st.markdown("")
+        
+        # File uploader for test data
+        st.subheader("2️⃣ Upload Test Dataset")
+        test_file = st.file_uploader(
+            "📤 Upload Test Data CSV (with quality_binary column)",
+            type=['csv'],
+            key="test_data_upload",
+            help="Upload CSV file containing features and true labels"
+        )
+        
+        if test_file is not None:
+            try:
+                # Read uploaded file
+                test_df = pd.read_csv(test_file)
+                
+                st.success(f"✅ File uploaded: {test_file.name} ({len(test_df)} samples)")
+                
+                # Validate required columns
+                required_features = ['fixed_acidity', 'volatile_acidity', 'citric_acid', 'residual_sugar', 
+                                   'chlorides', 'free_sulfur_dioxide', 'total_sulfur_dioxide', 'density', 
+                                   'pH', 'sulphates', 'alcohol', 'wine_type']
+                
+                if 'quality_binary' not in test_df.columns:
+                    st.error("❌ Error: Missing 'quality_binary' column. Please include true labels in your CSV file.")
+                else:
+                    missing_features = [col for col in required_features if col not in test_df.columns]
+                    
+                    if missing_features:
+                        st.error(f"❌ Missing feature columns: {', '.join(missing_features)}")
+                    else:
+                        # Extract features and labels
+                        X_test = test_df[required_features].values
+                        y_test = test_df['quality_binary'].values
+                        
+                        # Scale features
+                        X_test_scaled = scaler.transform(X_test)
+                        
+                        # Get selected model
+                        eval_model = models[eval_model_name]
+                        
+                        # Make predictions
+                        y_pred = eval_model.predict(X_test_scaled)
+                        
+                        # Display evaluation results
+                        st.markdown("---")
+                        st.subheader(f"3️⃣ Evaluation Results - {eval_model_name}")
+                        
+                        # Metrics summary
+                        from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+                        
+                        col1, col2, col3, col4 = st.columns(4)
+                        with col1:
+                            acc = accuracy_score(y_test, y_pred)
+                            st.metric("Accuracy", f"{acc:.4f}", f"{acc*100:.2f}%")
+                        with col2:
+                            prec = precision_score(y_test, y_pred)
+                            st.metric("Precision", f"{prec:.4f}", f"{prec*100:.2f}%")
+                        with col3:
+                            rec = recall_score(y_test, y_pred)
+                            st.metric("Recall", f"{rec:.4f}", f"{rec*100:.2f}%")
+                        with col4:
+                            f1 = f1_score(y_test, y_pred)
+                            st.metric("F1-Score", f"{f1:.4f}", f"{f1*100:.2f}%")
+                        
+                        st.markdown("---")
+                        
+                        # Confusion Matrix and Classification Report side by side
+                        col_left, col_right = st.columns(2)
+                        
+                        with col_left:
+                            st.subheader("📊 Confusion Matrix")
+                            fig_cm = create_confusion_matrix(y_test, y_pred, eval_model_name)
+                            st.pyplot(fig_cm)
+                            plt.close()
+                            
+                            # Add interpretation
+                            cm = confusion_matrix(y_test, y_pred)
+                            tn, fp, fn, tp = cm.ravel()
+                            st.info(f"""
+                            **Matrix Interpretation:**
+                            - True Negatives (TN): {tn} - Correctly predicted Below Average
+                            - False Positives (FP): {fp} - Incorrectly predicted as Good Quality
+                            - False Negatives (FN): {fn} - Missed Good Quality wines
+                            - True Positives (TP): {tp} - Correctly predicted Good Quality
+                            """)
+                        
+                        with col_right:
+                            st.subheader("📋 Classification Report")
+                            report_df = display_classification_metrics(y_test, y_pred, eval_model_name)
+                            
+                            # Style the classification report
+                            st.dataframe(
+                                report_df.style.background_gradient(cmap='RdYlGn', subset=['precision', 'recall', 'f1-score'])
+                                              .format("{:.4f}"),
+                                height=250
+                            )
+                            
+                            st.info("""
+                            **Metrics Explained:**
+                            - **Precision**: Of all predicted Good Quality, how many are actually good?
+                            - **Recall**: Of all actual Good Quality wines, how many did we catch?
+                            - **F1-Score**: Harmonic mean of Precision and Recall
+                            - **Support**: Number of samples in each class
+                            """)
+                        
+                        # Download evaluation report
+                        st.markdown("---")
+                        st.subheader("💾 Download Evaluation Report")
+                        
+                        # Create comprehensive report
+                        eval_report = pd.DataFrame({
+                            'Metric': ['Accuracy', 'Precision', 'Recall', 'F1-Score', 
+                                      'True Negatives', 'False Positives', 'False Negatives', 'True Positives'],
+                            'Value': [acc, prec, rec, f1, tn, fp, fn, tp]
+                        })
+                        
+                        eval_csv = convert_df_to_csv(eval_report)
+                        st.download_button(
+                            label=f"📥 Download {eval_model_name} Evaluation Report",
+                            data=eval_csv,
+                            file_name=f"{eval_model_name.lower().replace(' ', '_')}_evaluation_report.csv",
+                            mime="text/csv",
+                            help="Download complete evaluation metrics"
+                        )
+                        
+            except Exception as e:
+                st.error(f"❌ Error processing test file: {str(e)}")
+                st.info("💡 Make sure your CSV has the correct format with all required columns including 'quality_binary'")
+        
+        else:
+            st.info("👆 Upload a test dataset with labels to evaluate model performance and view confusion matrix")
+    
+    # Tab 5: Test Your Data
+    with tab5:
         st.header("🧪 Test Your Own Wine Data")
         st.markdown("Upload a CSV file with wine properties to get batch predictions from all models.")
         
@@ -731,8 +1062,8 @@ def main():
         else:
             st.info("👆 Upload a CSV file to get started with batch predictions!")
     
-    # Tab 5: About
-    with tab5:
+    # Tab 6: About
+    with tab6:
         st.header("About This Application")
         
         col1, col2 = st.columns(2)
