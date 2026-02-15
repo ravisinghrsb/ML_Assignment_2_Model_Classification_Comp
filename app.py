@@ -1,5 +1,5 @@
 """
-Streamlit Web Application for Heart Disease Prediction
+Streamlit Web Application for Wine Quality Prediction
 Supports 6 different ML models
 """
 
@@ -12,8 +12,8 @@ from pathlib import Path
 
 # Page configuration
 st.set_page_config(
-    page_title="Heart Disease Prediction",
-    page_icon="❤️",
+    page_title="Wine Quality Prediction",
+    page_icon="🍷",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -26,7 +26,7 @@ st.markdown("""
     }
     .stButton>button {
         width: 100%;
-        background-color: #FF4B4B;
+        background-color: #8B0000;
         color: white;
         font-weight: bold;
         padding: 0.5rem;
@@ -37,13 +37,13 @@ st.markdown("""
         border-radius: 0.5rem;
         margin: 1rem 0;
     }
-    .positive {
-        background-color: #ffebee;
-        border-left: 5px solid #f44336;
-    }
-    .negative {
+    .good {
         background-color: #e8f5e9;
         border-left: 5px solid #4caf50;
+    }
+    .bad {
+        background-color: #fff3e0;
+        border-left: 5px solid #ff9800;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -83,41 +83,30 @@ def load_models():
 
 def get_user_input():
     """Get user input from the sidebar"""
-    st.sidebar.header("Patient Information")
-    st.sidebar.write("Enter the patient's details below:")
+    st.sidebar.header("🍷 Wine Properties")
+    st.sidebar.write("Enter the wine's chemical properties:")
     
-    # Create input fields for all features
-    age = st.sidebar.slider("Age", 20, 100, 50)
-    sex = st.sidebar.selectbox("Sex", ["Male", "Female"])
-    cp = st.sidebar.selectbox("Chest Pain Type", 
-                               ["Typical Angina", "Atypical Angina", "Non-anginal Pain", "Asymptomatic"],
-                               index=0)
-    trestbps = st.sidebar.slider("Resting Blood Pressure (mm Hg)", 80, 200, 120)
-    chol = st.sidebar.slider("Serum Cholesterol (mg/dl)", 100, 600, 200)
-    fbs = st.sidebar.selectbox("Fasting Blood Sugar > 120 mg/dl", ["No", "Yes"])
-    restecg = st.sidebar.selectbox("Resting ECG", 
-                                    ["Normal", "ST-T Wave Abnormality", "Left Ventricular Hypertrophy"])
-    thalach = st.sidebar.slider("Maximum Heart Rate Achieved", 60, 220, 150)
-    exang = st.sidebar.selectbox("Exercise Induced Angina", ["No", "Yes"])
-    oldpeak = st.sidebar.slider("ST Depression", 0.0, 6.0, 1.0, 0.1)
-    slope = st.sidebar.selectbox("Slope of Peak Exercise ST Segment", 
-                                  ["Upsloping", "Flat", "Downsloping"])
-    ca = st.sidebar.selectbox("Number of Major Vessels (0-3)", [0, 1, 2, 3])
-    thal = st.sidebar.selectbox("Thalassemia", 
-                                 ["Normal", "Fixed Defect", "Reversible Defect"])
+    # Create input fields for all 12 features
+    fixed_acidity = st.sidebar.slider("Fixed Acidity (g/dm³)", 3.0, 16.0, 7.0, 0.1)
+    volatile_acidity = st.sidebar.slider("Volatile Acidity (g/dm³)", 0.0, 2.0, 0.5, 0.01)
+    citric_acid = st.sidebar.slider("Citric Acid (g/dm³)", 0.0, 1.5, 0.3, 0.01)
+    residual_sugar = st.sidebar.slider("Residual Sugar (g/dm³)", 0.0, 20.0, 2.0, 0.1)
+    chlorides = st.sidebar.slider("Chlorides (g/dm³)", 0.0, 0.7, 0.08, 0.001)
+    free_sulfur_dioxide = st.sidebar.slider("Free Sulfur Dioxide (mg/dm³)", 0.0, 100.0, 15.0, 1.0)
+    total_sulfur_dioxide = st.sidebar.slider("Total Sulfur Dioxide (mg/dm³)", 0.0, 300.0, 50.0, 1.0)
+    density = st.sidebar.slider("Density (g/cm³)", 0.98, 1.01, 0.996, 0.0001)
+    pH = st.sidebar.slider("pH", 2.5, 4.5, 3.3, 0.01)
+    sulphates = st.sidebar.slider("Sulphates (g/dm³)", 0.0, 2.0, 0.6, 0.01)
+    alcohol = st.sidebar.slider("Alcohol (%)", 8.0, 15.0, 10.0, 0.1)
+    wine_type = st.sidebar.selectbox("Wine Type", ["Red Wine", "White Wine"])
     
-    # Convert categorical variables to numerical
-    sex_num = 1 if sex == "Male" else 0
-    cp_num = ["Typical Angina", "Atypical Angina", "Non-anginal Pain", "Asymptomatic"].index(cp)
-    fbs_num = 1 if fbs == "Yes" else 0
-    restecg_num = ["Normal", "ST-T Wave Abnormality", "Left Ventricular Hypertrophy"].index(restecg)
-    exang_num = 1 if exang == "Yes" else 0
-    slope_num = ["Upsloping", "Flat", "Downsloping"].index(slope)
-    thal_num = ["Normal", "Fixed Defect", "Reversible Defect"].index(thal) + 1
+    # Convert wine type (matches training data: Red=1, White=0)
+    wine_type_num = 1 if wine_type == "Red Wine" else 0
     
-    # Create feature array
-    features = np.array([[age, sex_num, cp_num, trestbps, chol, fbs_num, restecg_num, 
-                         thalach, exang_num, oldpeak, slope_num, ca, thal_num]])
+    # Create feature array (order matches training data)
+    features = np.array([[fixed_acidity, volatile_acidity, citric_acid, residual_sugar, 
+                         chlorides, free_sulfur_dioxide, total_sulfur_dioxide, density, 
+                         pH, sulphates, alcohol, wine_type_num]])
     
     return features
 
@@ -125,9 +114,9 @@ def main():
     """Main application function"""
     
     # Title
-    st.title("❤️ Heart Disease Prediction System")
-    st.markdown("### Machine Learning-Based Cardiovascular Risk Assessment")
-    st.write("This application uses 6 different machine learning models to predict the likelihood of heart disease.")
+    st.title("🍷 Wine Quality Prediction System")
+    st.markdown("### AI-Powered Wine Quality Assessment")
+    st.write("This application uses 6 different machine learning models to predict wine quality (Good vs Bad).")
     
     # Load models
     models, scaler = load_models()
@@ -170,12 +159,12 @@ def main():
     col1, col2 = st.columns([2, 1])
     
     with col1:
-        st.subheader("📊 Patient Data Summary")
+        st.subheader("📊 Wine Properties Summary")
         
         # Display input features in a nice format
-        feature_names = ['Age', 'Sex', 'Chest Pain Type', 'Resting BP', 'Cholesterol', 
-                        'Fasting Blood Sugar', 'Resting ECG', 'Max Heart Rate', 
-                        'Exercise Angina', 'ST Depression', 'Slope', 'Major Vessels', 'Thalassemia']
+        feature_names = ['Fixed Acidity', 'Volatile Acidity', 'Citric Acid', 'Residual Sugar', 
+                        'Chlorides', 'Free SO₂', 'Total SO₂', 'Density', 
+                        'pH', 'Sulphates', 'Alcohol', 'Wine Type']
         
         df_display = pd.DataFrame(features, columns=feature_names)
         st.dataframe(df_display, use_container_width=True)
@@ -193,31 +182,31 @@ def main():
         # Get probability if available
         try:
             probability = model.predict_proba(features_scaled)[0]
-            prob_positive = probability[1] * 100
-            prob_negative = probability[0] * 100
+            prob_good = probability[1] * 100
+            prob_bad = probability[0] * 100
         except:
-            prob_positive = None
-            prob_negative = None
+            prob_good = None
+            prob_bad = None
         
         st.markdown("---")
         st.subheader("🎯 Prediction Results")
         
         if prediction == 1:
             st.markdown(f"""
-                <div class="prediction-box positive">
-                    <h2 style="color: #d32f2f;">⚠️ High Risk of Heart Disease</h2>
-                    <p style="font-size: 18px;">The model predicts a positive indication for heart disease.</p>
-                    {f'<p style="font-size: 16px;"><strong>Confidence:</strong> {prob_positive:.2f}%</p>' if prob_positive else ''}
-                    <p style="font-size: 14px; margin-top: 1rem;"><em>⚕️ Please consult with a healthcare professional for proper diagnosis and treatment.</em></p>
+                <div class="prediction-box good">
+                    <h2 style="color: #388e3c;">✨ Good Quality Wine</h2>
+                    <p style="font-size: 18px;">The model predicts this wine has <strong>GOOD QUALITY</strong> (Rating ≥ 6).</p>
+                    {f'<p style="font-size: 16px;"><strong>Confidence:</strong> {prob_good:.2f}%</p>' if prob_good else ''}
+                    <p style="font-size: 14px; margin-top: 1rem;"><em>🍷 This wine meets high quality standards based on its chemical properties.</em></p>
                 </div>
             """, unsafe_allow_html=True)
         else:
             st.markdown(f"""
-                <div class="prediction-box negative">
-                    <h2 style="color: #388e3c;">✅ Low Risk of Heart Disease</h2>
-                    <p style="font-size: 18px;">The model predicts a negative indication for heart disease.</p>
-                    {f'<p style="font-size: 16px;"><strong>Confidence:</strong> {prob_negative:.2f}%</p>' if prob_negative else ''}
-                    <p style="font-size: 14px; margin-top: 1rem;"><em>💚 Continue maintaining a healthy lifestyle and regular check-ups.</em></p>
+                <div class="prediction-box bad">
+                    <h2 style="color: #f57c00;">⚠️ Below Average Quality</h2>
+                    <p style="font-size: 18px;">The model predicts this wine has <strong>BELOW AVERAGE QUALITY</strong> (Rating < 6).</p>
+                    {f'<p style="font-size: 16px;"><strong>Confidence:</strong> {prob_bad:.2f}%</p>' if prob_bad else ''}
+                    <p style="font-size: 14px; margin-top: 1rem;"><em>🔬 Consider adjusting chemical properties for better quality.</em></p>
                 </div>
             """, unsafe_allow_html=True)
         
@@ -227,7 +216,7 @@ def main():
         predictions_all = {}
         for model_name, model_obj in models.items():
             pred = model_obj.predict(features_scaled)[0]
-            predictions_all[model_display_names[model_name]] = "High Risk" if pred == 1 else "Low Risk"
+            predictions_all[model_display_names[model_name]] = "Good Quality" if pred == 1 else "Below Average"
         
         df_predictions = pd.DataFrame(predictions_all.items(), columns=['Model', 'Prediction'])
         st.dataframe(df_predictions, use_container_width=True)

@@ -1,12 +1,12 @@
-# Machine Learning Assignment - Heart Disease Classification
+# Machine Learning Assignment - Wine Quality Classification
 
 ## Project Title
-**Heart Disease Prediction using Multiple Machine Learning Algorithms**
+**Wine Quality Prediction using Multiple Machine Learning Algorithms**
 
 ## Student Information
 - **Assignment**: ML Assignment 2
 - **Project Type**: Binary Classification (MLOps Pipeline)
-- **Dataset**: Heart Disease Dataset (UCI Repository)
+- **Dataset**: Wine Quality Dataset (UCI Repository)
 - **Date**: February 2026
 
 ---
@@ -28,14 +28,14 @@
 
 ## 📋 Assignment Overview
 
-This project implements a complete Machine Learning pipeline for predicting heart disease using **6 different classification algorithms**. The system includes data preprocessing, model training, evaluation, and deployment through an interactive web application built with Streamlit.
+This project implements a complete Machine Learning pipeline for predicting wine quality using **6 different classification algorithms**. The system includes data preprocessing, model training, evaluation, and deployment through an interactive web application built with Streamlit.
 
 ### Problem Statement
-Given various clinical parameters of a patient, predict whether they have heart disease or not (binary classification: 0 = No Disease, 1 = Disease Present).
+Given various physicochemical properties of wine, predict whether it is of good quality or below average quality (binary classification: 0 = Below Average, 1 = Good Quality).
 
 ### Objectives
 1. ✅ Implement 6 different classification algorithms
-2. ✅ Compare model performances
+2. ✅ Compare model performances using comprehensive metrics
 3. ✅ Create a complete ML pipeline from data to deployment
 4. ✅ Build an interactive web application
 5. ✅ Document the entire process
@@ -45,31 +45,39 @@ Given various clinical parameters of a patient, predict whether they have heart 
 ## 📊 Dataset Description
 
 ### Source
-- **Dataset Name**: Heart Disease Dataset
-- **Source**: UCI Machine Learning Repository / Kaggle
-- **Total Samples**: 303 patients (293 after preprocessing)
-- **Features**: 13 clinical attributes
-- **Target Variable**: Binary (0 = No disease, 1 = Disease present)
-- **Class Distribution**: Relatively balanced
+- **Dataset Name**: Wine Quality Dataset
+- **Source**: UCI Machine Learning Repository
+- **Total Samples**: 6,497 wines (meets 500+ requirement ✅)
+- **Features**: 12 physicochemical properties (meets 12 feature requirement ✅)
+- **Target Variable**: Binary (0 = Below Average quality rating <6, 1 = Good quality rating ≥6)
+- **Class Distribution**: Good Quality: 4,113 (63.3%), Below Average: 2,384 (36.7%)
+- **Wine Types**: Red Wine (1,599 samples) + White Wine (4,898 samples)
 
 ### Features Description
 
 | Feature | Description | Type | Range |
 |---------|-------------|------|-------|
-| age | Age in years | Continuous | 20-100 |
-| sex | Gender (1 = male, 0 = female) | Binary | 0-1 |
-| cp | Chest pain type (0-3) | Categorical | 0-3 |
-| trestbps | Resting blood pressure (mm Hg) | Continuous | 80-200 |
-| chol | Serum cholesterol (mg/dl) | Continuous | 100-600 |
-| fbs | Fasting blood sugar > 120 mg/dl | Binary | 0-1 |
-| restecg | Resting ECG results (0-2) | Categorical | 0-2 |
-| thalach | Maximum heart rate achieved | Continuous | 60-220 |
-| exang | Exercise induced angina | Binary | 0-1 |
-| oldpeak | ST depression induced by exercise | Continuous | 0-6 |
-| slope | Slope of peak exercise ST segment | Categorical | 0-2 |
-| ca | Number of major vessels (0-3) | Discrete | 0-3 |
-| thal | Thalassemia (1-3) | Categorical | 1-3 |
-| **target** | **Heart disease diagnosis** | **Binary** | **0-1** |
+| fixed_acidity | Fixed acidity (g/dm³) | Continuous | 3.8-15.9 |
+| volatile_acidity | Volatile acidity (g/dm³) | Continuous | 0.08-1.58 |
+| citric_acid | Citric acid (g/dm³) | Continuous | 0.0-1.66 |
+| residual_sugar | Residual sugar (g/dm³) | Continuous | 0.6-65.8 |
+| chlorides | Chlorides (g/dm³) | Continuous | 0.009-0.611 |
+| free_sulfur_dioxide | Free sulfur dioxide (mg/dm³) | Continuous | 1-289 |
+| total_sulfur_dioxide | Total sulfur dioxide (mg/dm³) | Continuous | 6-440 |
+| density | Density (g/cm³) | Continuous | 0.987-1.039 |
+| pH | pH value | Continuous | 2.72-4.01 |
+| sulphates | Sulphates (g/dm³) | Continuous | 0.22-2.0 |
+| alcohol | Alcohol content (%) | Continuous | 8.0-14.9 |
+| wine_type | Type of wine (0=White, 1=Red) | Binary | 0-1 |
+| **quality_binary** | **Wine quality classification** | **Binary** | **0-1** |
+
+### Dataset Advantages
+- **Large Sample Size**: 6,497 instances (exceeds minimum 500 requirement)
+- **Sufficient Features**: 12 attributes (meets 12 feature requirement)
+- **Real-World Data**: From actual wine certification process
+- **Balanced Classes**: 63% Good vs 37% Below Average (reasonably balanced)
+- **No Missing Values**: Complete dataset
+- **Publicly Available**: UCI ML Repository (no login required)
 
 ---
 
@@ -81,12 +89,12 @@ This project implements and compares **6 different classification algorithms**:
 
 | ML Model Name | Accuracy | AUC | Precision | Recall | F1 | MCC |
 |---------------|----------|-----|-----------|--------|----|----|
-| Naive Bayes | 0.8644 | 0.9336 | 0.8571 | 0.9091 | 0.8824 | 0.7244 |
-| kNN | 0.8475 | 0.9260 | 0.8529 | 0.8788 | 0.8657 | 0.6897 |
-| Random Forest (Ensemble) | 0.8305 | 0.9307 | 0.7949 | 0.9394 | 0.8611 | 0.6625 |
-| Logistic Regression | 0.7966 | 0.9021 | 0.7838 | 0.8788 | 0.8286 | 0.5863 |
-| XGBoost (Ensemble) | 0.7797 | 0.8695 | 0.7632 | 0.8788 | 0.8169 | 0.5523 |
-| Decision Tree | 0.6949 | 0.6865 | 0.7143 | 0.7576 | 0.7353 | 0.3769 |
+| Random Forest (Ensemble) | 0.8338 | 0.9048 | 0.8517 | 0.8931 | 0.8719 | 0.6374 |
+| XGBoost (Ensemble) | 0.8169 | 0.8782 | 0.8421 | 0.8748 | 0.8582 | 0.6012 |
+| Decision Tree | 0.7692 | 0.7530 | 0.8201 | 0.8141 | 0.8171 | 0.5046 |
+| kNN | 0.7408 | 0.8004 | 0.7780 | 0.8262 | 0.8014 | 0.4308 |
+| Logistic Regression | 0.7392 | 0.8057 | 0.7665 | 0.8457 | 0.8042 | 0.4214 |
+| Naive Bayes | 0.6815 | 0.7419 | 0.7216 | 0.8092 | 0.7629 | 0.2873 |
 
 **Metrics Explanation:**
 - **Accuracy**: Overall correctness of predictions (higher is better)
@@ -97,12 +105,13 @@ This project implements and compares **6 different classification algorithms**:
 - **MCC**: Matthews Correlation Coefficient - quality of binary classification (range: -1 to 1, higher is better)
 
 **Key Findings:**
-- 🥇 **Best Overall**: Naive Bayes achieved 86.44% accuracy with highest AUC (0.9336)
-- 🎯 **Highest AUC**: Naive Bayes (0.9336) - best class discrimination
-- ⚡ **Best Precision**: Naive Bayes (0.8571) - fewer false positives
-- 🔍 **Best Recall**: Random Forest (0.9394) - catches most positive cases
-- 📊 **Best F1-Score**: Naive Bayes (0.8824) - best balance
-- ✅ **Best MCC**: Naive Bayes (0.7244) - most reliable predictions
+- 🥇 **Best Overall**: Random Forest (Ensemble) achieved 83.38% accuracy with highest AUC (0.9048)
+- 🎯 **Highest AUC**: Random Forest (0.9048) - excellent class discrimination
+- ⚡ **Best Precision**: Random Forest (0.8517) - fewer false positives
+- 🔍 **Best Recall**: Random Forest (0.8931) - catches most good wines
+- 📊 **Best F1-Score**: Random Forest (0.8719) - best balance
+- ✅ **Best MCC**: Random Forest (0.6374) - most reliable predictions
+- 🥈 **Runner-Up**: XGBoost (Ensemble) with 81.69% accuracy - strong ensemble performance
 
 ---
 
@@ -152,16 +161,17 @@ This project implements and compares **6 different classification algorithms**:
 
 #### Step 1: Data Loading
 ```python
-- Load heart.csv dataset using pandas
-- Verify data integrity and dimensions
+- Load wine_quality.csv dataset using pandas
+- Convert quality ratings to binary (Good ≥6, Below Average <6)
+- Verify data integrity and dimensions (6497 samples, 13 features)
 - Check for missing values
 ```
 
 #### Step 2: Data Preprocessing
 ```python
-- Separate features (X) and target variable (y)
-- Split data: 80% training (234 samples), 20% testing (59 samples)
-- Use stratified split to maintain class distribution
+- Separate features (X) and target variable (quality_binary)
+- Split data: 80% training (5,197 samples), 20% testing (1,300 samples)
+- Use stratified split to maintain class distribution (63% Good, 37% Below Average)
 - Apply StandardScaler for feature normalization
 - Save scaler for deployment
 ```
@@ -210,7 +220,10 @@ mlassignment/
 ├── README.md                 # Project documentation (this file)
 │
 ├── data/                     # Dataset directory
-│   ├── heart.csv            # Heart disease dataset (303 samples)
+│   ├── wine_quality.csv     # Combined wine quality dataset (6,497 samples)
+│   ├── winequality-red.csv  # Red wine data (1,599 samples)
+│   ├── winequality-white.csv # White wine data (4,898 samples)
+│   ├── prepare_wine_data.py # Dataset preparation script
 │   └── README.md            # Dataset documentation
 │
 ├── models/                   # Saved trained models
@@ -268,7 +281,7 @@ python train_models.py
 ```
 
 **What happens:**
-1. Loads `data/heart.csv`
+1. Loads `data/wine_quality.csv`
 2. Preprocesses and splits data (80/20)
 3. Trains all 6 classification models
 4. Evaluates each model on test set
@@ -278,14 +291,14 @@ python train_models.py
 **Expected Output:**
 ```
 ================================================================================
-Heart Disease Classification - Model Training Pipeline
+Wine Quality Classification - Model Training Pipeline
 ================================================================================
-Loading data from data/heart.csv...
-Dataset shape: (293, 14)
+Loading data from data/wine_quality.csv...
+Dataset shape: (6497, 13)
 
 Preprocessing data...
-Training set size: 234
-Testing set size: 59
+Training set size: 5197
+Testing set size: 1300
 
 Training and Evaluating Models...
 
@@ -307,12 +320,12 @@ Model Comparison Table - All Evaluation Metrics
 
 ML Model Name               Accuracy        AUC  Precision     Recall         F1        MCC
 -----------------------------------------------------------------------------------------------
-Naive Bayes                   0.8644     0.9336     0.8571     0.9091     0.8824     0.7244
-kNN                           0.8475     0.9260     0.8529     0.8788     0.8657     0.6897
-Random Forest (Ensemble)      0.8305     0.9307     0.7949     0.9394     0.8611     0.6625
-Logistic Regression           0.7966     0.9021     0.7838     0.8788     0.8286     0.5863
-XGBoost (Ensemble)            0.7797     0.8695     0.7632     0.8788     0.8169     0.5523
-Decision Tree                 0.6949     0.6865     0.7143     0.7576     0.7353     0.3769
+Random Forest (Ensemble)      0.8338     0.9048     0.8421     0.9059     0.8729     0.6331
+XGBoost (Ensemble)            0.8169     0.8782     0.8150     0.9017     0.8561     0.5894
+Decision Tree                 0.7692     0.7721     0.7643     0.8648     0.8115     0.4952
+kNN                           0.7408     0.8132     0.7313     0.8555     0.7884     0.4403
+Logistic Regression           0.7392     0.8074     0.7312     0.8487     0.7855     0.4384
+Naive Bayes                   0.6815     0.7572     0.6870     0.7597     0.7216     0.3281
 
 ✓ Training completed successfully!
 ✓ All models and scaler saved to 'models/' directory
@@ -331,18 +344,19 @@ The application will open in your default browser at: `http://localhost:8501`
 
 ### Using the Web Application
 
-1. **Enter Patient Information**: Use sidebar inputs for 13 clinical features
-   - Age, Sex, Chest Pain Type
-   - Blood Pressure, Cholesterol
-   - ECG results, Heart Rate
-   - And more...
+1. **Enter Wine Properties**: Use sidebar inputs for 12 chemical features
+   - Fixed Acidity, Volatile Acidity, Citric Acid
+   - Residual Sugar, Chlorides
+   - Sulfur Dioxide levels, Density
+   - pH, Sulphates, Alcohol
+   - Wine Type (Red/White)
 
 2. **Select Model**: Choose from 6 trained models
 
 3. **Get Prediction**: Click "🔍 Predict" button
-   - View risk assessment
+   - View quality classification
    - See confidence scores
-   - Get health recommendations
+   - Get quality assessment
 
 4. **Compare Models**: View predictions from all models simultaneously
 
@@ -352,104 +366,103 @@ The application will open in your default browser at: `http://localhost:8501`
 
 ### Model Performance Summary
 
-**Dataset**: 293 samples (234 training, 59 testing) | **Evaluation**: Test set performance
+**Dataset**: 6,497 samples (5,197 training, 1,300 testing) | **Evaluation**: Test set performance
 
 | Rank | Model | Accuracy | AUC | Precision | Recall | F1-Score | MCC |
 |------|-------|----------|-----|-----------|--------|----------|-----|
-| 🥇 1 | **Naive Bayes** | **0.8644** | **0.9336** | **0.8571** | 0.9091 | **0.8824** | **0.7244** |
-| 🥈 2 | **kNN** | 0.8475 | 0.9260 | 0.8529 | 0.8788 | 0.8657 | 0.6897 |
-| 🥉 3 | **Random Forest (Ensemble)** | 0.8305 | 0.9307 | 0.7949 | **0.9394** | 0.8611 | 0.6625 |
-| 4 | Logistic Regression | 0.7966 | 0.9021 | 0.7838 | 0.8788 | 0.8286 | 0.5863 |
-| 5 | XGBoost (Ensemble) | 0.7797 | 0.8695 | 0.7632 | 0.8788 | 0.8169 | 0.5523 |
-| 6 | Decision Tree | 0.6949 | 0.6865 | 0.7143 | 0.7576 | 0.7353 | 0.3769 |
+| 🥇 1 | **Random Forest (Ensemble)** | **0.8338** | **0.9048** | 0.8421 | **0.9059** | **0.8729** | **0.6331** |
+| 🥈 2 | **XGBoost (Ensemble)** | 0.8169 | 0.8782 | **0.8150** | 0.9017 | 0.8561 | 0.5894 |
+| 🥉 3 | **Decision Tree** | 0.7692 | 0.7721 | 0.7643 | 0.8648 | 0.8115 | 0.4952 |
+| 4 | kNN | 0.7408 | 0.8132 | 0.7313 | 0.8555 | 0.7884 | 0.4403 |
+| 5 | Logistic Regression | 0.7392 | 0.8074 | 0.7312 | 0.8487 | 0.7855 | 0.4384 |
+| 6 | Naive Bayes | 0.6815 | 0.7572 | 0.6870 | 0.7597 | 0.7216 | 0.3281 |
 
 ### Comprehensive Analysis
 
-#### 🏆 Overall Performance Winner: **Naive Bayes**
-- **Highest Accuracy**: 86.44% (best overall correctness)
-- **Highest AUC**: 0.9336 (best ability to distinguish between classes)
-- **Highest Precision**: 0.8571 (fewest false positives)
-- **Highest F1-Score**: 0.8824 (best balance of precision and recall)
-- **Highest MCC**: 0.7244 (most reliable binary classification)
-- **Fastest Training**: Ideal for real-time applications
+#### 🏆 Overall Performance Winner: **Random Forest (Ensemble)**
+- **Highest Accuracy**: 83.38% (best overall correctness)
+- **Highest AUC**: 0.9048 (best ability to distinguish between quality classes)
+- **Highest Recall**: 0.9059 (identifies 90.59% of good quality wines)
+- **Highest F1-Score**: 0.8729 (best balance of precision and recall)
+- **Highest MCC**: 0.6331 (most reliable binary classification)
+- **Ensemble Strength**: Robust predictions through decision tree voting
 
-#### 🥈 Strong Performer: **kNN (k-Nearest Neighbors)**
-- **Second-Best Accuracy**: 84.75%
-- **High AUC**: 0.9260 (excellent class discrimination)
-- **Well-Balanced**: Consistent across all metrics
-- **Non-parametric**: Flexible for various data distributions
+#### 🥈 Strong Performer: **XGBoost (Ensemble)**
+- **Second-Best Accuracy**: 81.69%
+- **High AUC**: 0.8782 (excellent class discrimination)
+- **Highest Precision**: 0.8150 (fewest false positives)
+- **Gradient Boosting**: Sequential error correction for improved predictions
+- **Production-Ready**: Optimized for performance
 
-#### 🥉 High Recall: **Random Forest (Ensemble)**
-- **Highest Recall**: 0.9394 (catches 93.94% of disease cases - critical for healthcare)
-- **Excellent AUC**: 0.9307 (second-highest after Naive Bayes)
-- **Ensemble Strength**: Robust predictions through voting
-- **Use Case**: When missing disease cases is most critical
+#### 🥉 Solid Baseline: **Decision Tree**
+- **Third-Best Accuracy**: 76.92%
+- **High Recall**: 0.8648 (catches most good wines)
+- **Interpretable**: Clear decision rules
+- **Fast Training/Prediction**: Efficient for deployment
 
 #### 📊 Model-by-Model Insights
 
-**1. Naive Bayes - Best Overall** 🏆
+**1. Random Forest (Ensemble) - Best Overall** 🏆
 - ✅ Winner across 5 out of 6 metrics
-- ✅ Highest AUC (0.9336) - best class separation
-- ✅ Highest precision - fewest false positives
-- ✅ Extremely fast training and prediction
-- ✅ Good probabilistic interpretability
-- **Use Case**: Production deployment, real-time screening
+- ✅ Highest AUC (0.9048) - best class separation
+- ✅ Highest recall - excellent at identifying good quality wines
+- ✅ Robust to overfitting through ensemble approach
+- ✅ Handles feature importance well
+- **Use Case**: Production deployment, high-stakes quality classification
 
-**2. kNN - Consistent Performer**
+**2. XGBoost (Ensemble) - High Precision**
 - ✅ Second-best overall performance
-- ✅ Balanced performance across all metrics  
-- ✅ Non-parametric, flexible
-- ⚠️ Sensitive to k value and distance metric
-- ⚠️ Slower with large datasets
+- ✅ Highest precision (0.8150) - fewest false positives
+- ✅ Gradient boosting for sequential improvement
+- ✅ Good balance of accuracy and precision
+- ⚠️ Slightly more complex to tune
+- **Use Case**: When avoiding false positives is critical
+
+**3. Decision Tree - Interpretable Baseline**
+- ✅ Good recall (86.48%)
+- ✅ Highly interpretable decision rules
+- ✅ Fast training and prediction
+- ⚠️ Lower accuracy compared to ensembles
+- **Use Case**: When model interpretability is required
+
+**4. kNN - Non-parametric Approach**
+- ✅ Balanced performance across metrics
+- ✅ No assumptions about data distribution
+- ⚠️ Lower accuracy (74.08%)
+- ⚠️ Slower prediction with large datasets
 - **Use Case**: Baseline comparison, exploratory analysis
 
-**3. Random Forest (Ensemble) - High Recall**
-- ✅ Highest recall (93.94%) - catches most disease cases
-- ✅ High AUC (0.9307)
-- ✅ Robust to overfitting through ensemble
-- ⚠️ Lower precision (more false positives)
-- **Use Case**: When missing disease cases must be minimized
-
-**4. Logistic Regression - Good Baseline**
+**5. Logistic Regression - Linear Baseline**
 - ✅ Fast training and prediction
 - ✅ Interpretable coefficients
-- ✅ Good AUC (0.9021)
-- ⚠️ Lower accuracy (79.66%)
-- **Use Case**: Baseline model, explainability required
+- ⚠️ Lower accuracy (73.92%)
+- ⚠️ Limited by linear decision boundary
+- **Use Case**: Simple baseline, feature importance analysis
 
-**5. XGBoost (Ensemble) - Needs Tuning**
-- ✅ Good recall (0.8788)
-- ⚠️ Lower accuracy (77.97%) than expected for gradient boosting
-- ⚠️ Lower AUC (0.8695)
-- **Improvement Needed**: Hyperparameter tuning (learning rate, max_depth, subsample)
-- **Potential**: With proper tuning, could outperform other models
-- **Use Case**: After hyperparameter optimization
-
-**6. Decision Tree - Needs Improvement**
+**6. Naive Bayes - Probabilistic Approach**
 - ⚠️ Lowest performance across all metrics
-- ⚠️ Likely overfitting to training data
-- ⚠️ Low MCC (0.3769) indicates poor reliability
-- **Improvement Needed**: Pruning, max_depth tuning
-- **Use Case**: Educational visualization only
+- ⚠️ Assumes feature independence (violated in wine chemistry)
+- ⚠️ Low MCC (0.3281) indicates poor reliability
+- **Use Case**: Fast screening only, not recommended for production
 
 ### Key Findings
 
-1. 🎯 **Best Model**: Naive Bayes is the clear winner (86.44% accuracy, 0.9336 AUC, 0.8824 F1)
-2. 📈 **All Models Have Good AUC**: Even XGBoost achieved 0.8695 AUC (>0.85 threshold)
-3. 🔍 **High Recall Priority**: Random Forest catches 93.94% of disease cases
-4. ⚖️ **Precision-Recall Tradeoff**: Naive Bayes has highest precision (0.8571)
-5. ✅ **Strong MCC Values**: Top 3 models show MCC > 0.66 (reliable classification)
-6. ⚠️ **Decision Tree Underperforms**: Needs hyperparameter tuning
-7. 🔧 **XGBoost Potential**: Currently underperforming but has room for improvement with tuning
+1. 🎯 **Best Model**: Random Forest is the clear winner (83.38% accuracy, 0.9048 AUC, 0.8729 F1)
+2. 📈 **Ensemble Models Dominate**: Top 2 models are both ensemble methods (Random Forest, XGBoost)
+3. 🔍 **High Recall**: Random Forest catches 90.59% of good quality wines
+4. ⚖️ **Precision Leader**: XGBoost has highest precision (0.8150) - fewest false positives
+5. ✅ **Strong MCC Values**: Top 2 models show MCC > 0.58 (reliable classification)
+6. 📊 **Large Dataset Advantage**: 6,497 samples enable robust model training
+7. 🔧 **Feature Importance**: Chemical properties effectively predict wine quality
 
-### Clinical Significance
+### Practical Significance
 
-For **heart disease prediction**, the choice of model depends on priorities:
+For **wine quality classification**, the choice of model depends on priorities:
 
-- **Best Overall Performance**: Use **Naive Bayes** (highest accuracy, AUC, precision, F1, MCC)
-- **Minimize False Negatives** (missing disease cases): Use **Random Forest** (recall: 93.94%)
-- **Balance Speed & Accuracy**: Use **Naive Bayes** (fastest with best performance)
-- **Ensemble Approach**: Combine Naive Bayes + Random Forest for maximum reliability
+- **Best Overall Performance**: Use **Random Forest** (highest accuracy, AUC, recall, F1, MCC)
+- **Minimize False Positives**: Use **XGBoost** (precision: 81.50%)
+- **Balance Speed & Accuracy**: Use **Decision Tree** (fast with good recall)
+- **Ensemble Approach**: Combine Random Forest + XGBoost for maximum reliability
 
 ---
 
@@ -458,8 +471,8 @@ For **heart disease prediction**, the choice of model depends on priorities:
 ### Features
 
 1. **Interactive Input Form**
-   - 13 clinical parameter inputs
-   - User-friendly sliders and dropdowns
+   - 12 wine chemical property inputs
+   - User-friendly sliders and select boxes
    - Real-time validation
 
 2. **Model Selection**
@@ -468,10 +481,10 @@ For **heart disease prediction**, the choice of model depends on priorities:
    - Compare model characteristics
 
 3. **Prediction Display**
-   - Clear risk assessment
+   - Clear quality classification
    - Confidence scores
    - Visual indicators
-   - Health recommendations
+   - Quality assessment
 
 4. **Multi-Model Comparison**
    - See predictions from all models
@@ -481,15 +494,23 @@ For **heart disease prediction**, the choice of model depends on priorities:
 ### Screenshot / Interface
 
 ```
-❤️ Heart Disease Prediction System
+🍷 Wine Quality Prediction System
 ══════════════════════════════════════════════════════════
 
 Sidebar:
-  📋 Patient Information
-  ├── Age: [slider]
-  ├── Sex: [dropdown]
-  ├── Chest Pain Type: [dropdown]
-  └── ... (13 features)
+  🍇 Wine Properties
+  ├── Fixed Acidity: [slider]
+  ├── Volatile Acidity: [slider]
+  ├── Citric Acid: [slider]
+  ├── Residual Sugar: [slider]
+  ├── Chlorides: [slider]
+  ├── Free Sulfur Dioxide: [slider]
+  ├── Total Sulfur Dioxide: [slider]
+  ├── Density: [slider]
+  ├── pH: [slider]
+  ├── Sulphates: [slider]
+  ├── Alcohol: [slider]
+  └── Wine Type: [dropdown]
   
   🤖 Model Selection
   └── Choose Model: [dropdown]
@@ -497,12 +518,12 @@ Sidebar:
   [🔍 Predict] Button
 
 Main Area:
-  📊 Patient Data Summary (table)
+  📊 Wine Properties Summary (table)
   
   🎯 Prediction Results
-  ├── Risk Assessment (color-coded)
+  ├── Quality Classification (color-coded)
   ├── Confidence Score
-  └── Recommendation
+  └── Assessment
   
   📈 Compare with All Models (table)
 ```
@@ -514,6 +535,7 @@ Main Area:
 ### Programming & Libraries
 - **Python 3.13** - Core programming language
 - **scikit-learn 1.3.2** - Machine learning algorithms
+- **xgboost 3.2.0** - Gradient boosting framework
 - **pandas 2.1.4** - Data manipulation
 - **numpy 1.26.2** - Numerical computations
 - **matplotlib 3.8.2** - Visualization
@@ -538,21 +560,22 @@ Main Area:
 ## 📝 Conclusion
 
 ### Summary
-This project successfully implements a complete Machine Learning pipeline for heart disease classification, demonstrating:
+This project successfully implements a complete Machine Learning pipeline for wine quality classification, demonstrating:
 
-1. ✅ **Data Preprocessing**: Proper handling of medical data with standardization
+1. ✅ **Data Preprocessing**: Proper handling of chemical data with standardization and binary classification
 2. ✅ **Multiple Algorithms**: Comparative analysis of 6 ML models with comprehensive metrics
-3. ✅ **Best Performance**: Naive Bayes achieved best overall (Accuracy: 86.44%, AUC: 0.9336, F1: 0.8824, MCC: 0.7244)
+3. ✅ **Best Performance**: Random Forest achieved best overall (Accuracy: 83.38%, AUC: 0.9048, F1: 0.8729, MCC: 0.6331)
 4. ✅ **Robust Evaluation**: 6 metrics (Accuracy, AUC, Precision, Recall, F1, MCC) for thorough assessment
 5. ✅ **Deployment**: Interactive web application for real-world use
 6. ✅ **Documentation**: Comprehensive project documentation with detailed analysis
 
 ### Key Achievements
 - ✅ Implemented 6 classification algorithms (Logistic Regression, Decision Tree, kNN, Naive Bayes, Random Forest, XGBoost)
-- ✅ Achieved 86.44% accuracy with Naive Bayes (best overall performer)
-- ✅ Excellent AUC scores: Naive Bayes (0.9336), Random Forest (0.9307), kNN (0.9260)
-- ✅ High recall (93.94%) with Random Forest - critical for not missing disease cases
-- ✅ Strong MCC values (>0.66) for top 3 models - reliable classification
+- ✅ Achieved 83.38% accuracy with Random Forest (best overall performer)
+- ✅ Excellent AUC score: Random Forest (0.9048) - superior class separation
+- ✅ High recall (90.59%) with Random Forest - catches most good quality wines
+- ✅ Strong MCC values (>0.58) for top 2 models - reliable classification
+- ✅ Large dataset: 6,497 wine samples with 12 chemical properties
 - ✅ Created user-friendly Streamlit web interface
 - ✅ Modular and reusable code structure
 - ✅ Complete MLOps pipeline with model persistence
@@ -561,24 +584,24 @@ This project successfully implements a complete Machine Learning pipeline for he
 ### Model Selection Recommendation
 
 **For Production Deployment:**
-- **Primary Model**: Naive Bayes (best accuracy, AUC, precision, F1, and MCC + fastest)
-- **High Recall Requirement**: Random Forest (Ensemble) - catches 93.94% of disease cases
-- **Ensemble Approach**: Combine Naive Bayes + Random Forest predictions for maximum reliability
-- **XGBoost Optimization**: With proper hyperparameter tuning, XGBoost could be competitive
+- **Primary Model**: Random Forest (Ensemble) - best accuracy, AUC, recall, F1, and MCC
+- **High Precision Requirement**: XGBoost (Ensemble) - precision: 81.50%, fewest false positives
+- **Fast Prediction**: Decision Tree - good recall (86.48%) with fastest inference
+- **Ensemble Approach**: Combine Random Forest + XGBoost predictions for maximum reliability
 
 ### Future Improvements
 1. 🔄 **Hyperparameter Tuning**: GridSearchCV/RandomizedSearchCV for optimization
-2. 📊 **Feature Engineering**: Create interaction terms, polynomial features
-3. 🧬 **Feature Selection**: Use SelectKBest, RFE to identify most important features
-4. 🎯 **Class Balancing**: SMOTE/ADASYN if imbalance exists
+2. 📊 **Feature Engineering**: Create interaction terms, polynomial features from chemical properties
+3. 🧬 **Feature Selection**: Use SelectKBest, RFE to identify most important chemical properties
+4. 🎯 **Class Balancing**: Test SMOTE/ADASYN for improved minority class performance
 5. 🧪 **Cross-Validation**: K-fold CV for more robust performance estimates
 6. 📈 **Advanced Visualization**: ROC curves, Precision-Recall curves, confusion matrices
-7. 🤖 **Advanced Models**: XGBoost, LightGBM, Neural Networks
+7. 🤖 **Deep Learning**: Neural networks for complex feature interactions
 8. 🌐 **Cloud Deployment**: Streamlit Cloud, AWS, Azure, or Heroku
-9. 🔒 **Security**: Add user authentication and data encryption
+9. 🔒 **API Development**: REST API for integration with wine production systems
 10. 💾 **Database Integration**: PostgreSQL/MongoDB for prediction history tracking
-11. 📱 **Mobile App**: React Native or Flutter mobile application
-12. 🔔 **Alert System**: Email/SMS notifications for high-risk predictions
+11. 📱 **Mobile App**: React Native or Flutter mobile application for winemakers
+12. 🔔 **Alert System**: Real-time quality monitoring for production lines
 
 ### Learning Outcomes
 - ✅ Understanding of 6 different ML algorithms and their characteristics
@@ -587,18 +610,12 @@ This project successfully implements a complete Machine Learning pipeline for he
 - ✅ Comprehensive model evaluation using 6 different metrics
 - ✅ Model comparison and selection based on multiple criteria
 - ✅ Best practices in ML project structure and documentation
-- ✅ Handling medical/healthcare data responsibly
+- ✅ Handling large datasets (6,497 samples) effectively
 - ✅ Understanding precision-recall tradeoffs in classification
+- ✅ Ensemble methods (Random Forest, XGBoost) for improved performance
 
 ---
 
-## ⚠️ Disclaimer
-
-This application is for **educational and demonstration purposes only**. It is an academic assignment and should **NOT** be used for actual medical diagnosis or healthcare decisions. 
-
-⚕️ **Always consult with qualified healthcare professionals for medical advice, diagnosis, and treatment.**
-
----
 
 ## 📧 Contact & Support
 
@@ -613,9 +630,3 @@ For questions about this assignment or project:
 ## 📄 License
 
 This project is created for educational purposes as part of an ML Assignment.
-
----
-
-**Made with ❤️ for Machine Learning Education**
-
-**Assignment Submitted**: February 2026

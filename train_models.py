@@ -1,6 +1,6 @@
 """
-Train all 6 classification models for heart disease prediction
-Models: Logistic Regression, Decision Tree, Random Forest, XGBoost, KNN, Naive Bayes
+Train all 6 classification models for wine quality prediction
+Models: Logistic Regression, Decision Tree, kNN, Naive Bayes, Random Forest, XGBoost
 """
 
 import pandas as pd
@@ -23,20 +23,26 @@ import os
 RANDOM_STATE = 42
 np.random.seed(RANDOM_STATE)
 
-def load_data(filepath='data/heart.csv'):
-    """Load the heart disease dataset"""
+def load_data(filepath='data/wine_quality.csv'):
+    """Load the wine quality dataset"""
     print(f"Loading data from {filepath}...")
     df = pd.read_csv(filepath)
+    
+    # Convert to binary classification: Good wine (quality >= 6) vs Bad wine (quality < 6)
+    df['quality_binary'] = (df['quality'] >= 6).astype(int)
+    df = df.drop('quality', axis=1)
+    
     print(f"Dataset shape: {df.shape}")
+    print(f"Quality distribution: Good={df['quality_binary'].sum()}, Bad={(df['quality_binary']==0).sum()}")
     return df
 
 def preprocess_data(df):
     """Preprocess the data: split features and target, scale features"""
     print("\nPreprocessing data...")
     
-    # Assuming 'target' is the column name for the disease indicator
-    X = df.drop('target', axis=1)
-    y = df['target']
+    # Separate features and target (quality_binary)
+    X = df.drop('quality_binary', axis=1)
+    y = df['quality_binary']
     
     # Split data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(
@@ -145,7 +151,7 @@ def save_models(models, scaler):
 def main():
     """Main function to execute the training pipeline"""
     print("="*80)
-    print("Heart Disease Classification - Model Training Pipeline")
+    print("Wine Quality Classification - Model Training Pipeline")
     print("="*80)
     
     # Load data

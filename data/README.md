@@ -1,61 +1,71 @@
-# Heart Disease Dataset
+# Wine Quality Dataset
 
-This directory contains the heart disease dataset (`heart.csv`).
+This directory contains the wine quality dataset (`wine_quality.csv`).
 
 ## Dataset Information
 
-The dataset has the following structure:
+The dataset combines red and white wine samples with the following structure:
 
-### Features (13 attributes):
-1. **age**: Age in years
-2. **sex**: Sex (1 = male; 0 = female)
-3. **cp**: Chest pain type
-   - 0: Typical angina
-   - 1: Atypical angina
-   - 2: Non-anginal pain
-   - 3: Asymptomatic
-4. **trestbps**: Resting blood pressure (in mm Hg on admission to the hospital)
-5. **chol**: Serum cholesterol in mg/dl
-6. **fbs**: Fasting blood sugar > 120 mg/dl (1 = true; 0 = false)
-7. **restecg**: Resting electrocardiographic results
-   - 0: Normal
-   - 1: Having ST-T wave abnormality
-   - 2: Showing probable or definite left ventricular hypertrophy
-8. **thalach**: Maximum heart rate achieved
-9. **exang**: Exercise induced angina (1 = yes; 0 = no)
-10. **oldpeak**: ST depression induced by exercise relative to rest
-11. **slope**: The slope of the peak exercise ST segment
-    - 0: Upsloping
-    - 1: Flat
-    - 2: Downsloping
-12. **ca**: Number of major vessels (0-3) colored by fluoroscopy
-13. **thal**: Thalassemia
-    - 1: Normal
-    - 2: Fixed defect
-    - 3: Reversible defect
+### Features (12 chemical attributes):
+1. **fixed_acidity**: Fixed acidity (g/dm³) - tartaric acid content
+2. **volatile_acidity**: Volatile acidity (g/dm³) - acetic acid content (vinegar-like)
+3. **citric_acid**: Citric acid (g/dm³) - freshness and flavor
+4. **residual_sugar**: Residual sugar (g/dm³) - sweetness after fermentation
+5. **chlorides**: Chlorides (g/dm³) - salt content
+6. **free_sulfur_dioxide**: Free SO₂ (mg/dm³) - prevents microbial growth and oxidation
+7. **total_sulfur_dioxide**: Total SO₂ (mg/dm³) - free + bound forms
+8. **density**: Density (g/cm³) - depends on alcohol and sugar content
+9. **pH**: pH level (0-14 scale) - acidity measure
+10. **sulphates**: Sulphates (g/dm³) - wine additive (antimicrobial and antioxidant)
+11. **alcohol**: Alcohol content (% by volume)
+12. **wine_type**: Wine type (Red = 0; White = 1)
 
 ### Target Variable:
-- **target**: Diagnosis of heart disease (1 = presence; 0 = absence)
+- **quality_binary**: Wine quality classification
+  - 1 = Good Quality (original quality score ≥ 6)
+  - 0 = Below Average (original quality score < 6)
 
 ## Dataset Characteristics
 
-- **Total Samples**: 303 patients
-- **Features**: 13 clinical features + 1 target
-- **Classes**: Binary (0 = no disease, 1 = disease)
+- **Total Samples**: 6,497 wines
+  - Red wines: 1,599 samples
+  - White wines: 4,898 samples
+- **Features**: 12 chemical properties
+- **Classes**: Binary (0 = Below Average, 1 = Good Quality)
+- **Quality Distribution**:
+  - Good Quality: 4,113 samples (63.3%)
+  - Below Average: 2,384 samples (36.7%)
 - **No Missing Values**
 
 ## Dataset Sources
 
-You can obtain the heart disease dataset from:
+The wine quality dataset is obtained from:
 
 1. **UCI Machine Learning Repository**:
-   - [Heart Disease Dataset](https://archive.ics.uci.edu/ml/datasets/heart+disease)
+   - [Wine Quality Dataset](https://archive.ics.uci.edu/ml/datasets/wine+quality)
+   - Red Wine: `winequality-red.csv`
+   - White Wine: `winequality-white.csv`
 
-2. **Kaggle**:
-   - [Heart Disease UCI](https://www.kaggle.com/datasets/ronitf/heart-disease-uci)
+2. **Related Studies**:
+   - P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis. 
+   - "Modeling wine preferences by data mining from physicochemical properties."
+   - Decision Support Systems, Elsevier, 47(4):547-553, 2009.
+
+## Data Preparation
+
+The `prepare_wine_data.py` script combines red and white wine datasets:
+```bash
+python data/prepare_wine_data.py
+```
+
+This creates `wine_quality.csv` by:
+1. Loading red and white wine CSVs
+2. Adding a `wine_type` column (Red=0, White=1)
+3. Combining into a single dataset
+4. Saving to `wine_quality.csv`
 
 ## Usage
 
-With the `heart.csv` file in this directory, you can:
+With the `wine_quality.csv` file in this directory, you can:
 1. Train the models: `python train_models.py`
 2. Run the web app: `streamlit run app.py`
