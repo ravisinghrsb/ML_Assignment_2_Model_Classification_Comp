@@ -119,16 +119,16 @@ mlassignment/
 │   └── prepare_wine_data.py # Dataset preparation script
 │
 ├── models/                   # Saved trained models
-│   ├── logistic_regression.pkl
-│   ├── decision_tree.pkl
-│   ├── knn.pkl
-│   ├── naive_bayes.pkl
-│   ├── random_forest_(ensemble).pkl
-│   ├── xgboost_(ensemble).pkl
-│   ├── scaler.pkl           # StandardScaler for feature normalization
-│   └── model_metrics.csv    # Model evaluation metrics
-│
-└── .gitignore               # Git ignore file
+   ├── logistic_regression.pkl
+   ├── decision_tree.pkl
+   ├── knn.pkl
+   ├── naive_bayes.pkl
+   ├── random_forest_(ensemble).pkl
+   ├── xgboost_(ensemble).pkl
+   ├── scaler.pkl           # StandardScaler for feature normalization
+   └── model_metrics.csv    # Model evaluation metrics
+
+
 ```
 
 ## Implementation Pipeline
