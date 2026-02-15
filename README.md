@@ -100,10 +100,6 @@ Results on test set (1,300 samples):
 
 ## Project Structure
 
----
-
-## Project Structure
-
 ```
 mlassignment/
 │
@@ -126,9 +122,7 @@ mlassignment/
 │   ├── random_forest_(ensemble).pkl
 │   ├── xgboost_(ensemble).pkl
 │   ├── scaler.pkl           # StandardScaler for feature normalization
-│   └── model_metrics.csv    # Model evaluation metrics
-│
-└── .gitignore               # Git ignore file
+└── model_metrics.csv    # Model evaluation metrics
 ```
 
 ## Implementation Pipeline
@@ -196,7 +190,7 @@ Launch the Streamlit web interface:
 streamlit run app.py
 ```
 
-The application will open in your browser at http://localhost:8501
+The application will open in your browser at https://ravi-bhadauria-mlassignment2-modelclassificationcomp.streamlit.app/
 
 ### Web App Features
 
