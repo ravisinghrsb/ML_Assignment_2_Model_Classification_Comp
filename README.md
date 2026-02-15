@@ -196,7 +196,7 @@ Launch the Streamlit web interface:
 streamlit run app.py
 ```
 
-The application will open in your browser at http://localhost:8501
+The application will open in your browser at [http://localhost:8501](https://ravi-bhadauria-mlassignment2-modelclassificationcomp.streamlit.app/)
 
 ### Web App Features
 
