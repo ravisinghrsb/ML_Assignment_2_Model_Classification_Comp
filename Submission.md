@@ -21,7 +21,7 @@ https://ravi-bhadauria-mlassignment2-modelclassificationcomp.streamlit.app/
 
 ## 3. Screenshot - Execution on BITS Virtual Lab
 
-![screenshot](2025ab05247ml.png)
+![](2025ab05247ml.png)
 <img width="1280" height="558" alt="2025ab05247ml" src="https://github.com/user-attachments/assets/e9d1f05b-ed1a-4b68-a97f-cff8abccc0a2" />
 
 ---
